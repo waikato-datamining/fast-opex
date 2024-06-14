@@ -1,7 +1,8 @@
 # fast-opex
 Simpler and faster implementation of the OPEX JSON file format for object detection predictions.
 
-Uses [orjson](https://github.com/ijl/orjson) if present (no pretty-printing available), otherwise the standard json library.
+Uses [orjson](https://github.com/ijl/orjson) if present (no pretty-printing available) for further speed-ups, 
+otherwise the standard json library.
 
 This library is written in Python. For a Java port, please see 
 [opex4j](https://github.com/waikato-datamining/opex4j).
