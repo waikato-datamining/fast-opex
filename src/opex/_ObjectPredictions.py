@@ -1,12 +1,14 @@
+ORJSON_INDENT_WARNING = False
 try:
+    import orjson
     import orjson as json
-    INDENT = False
+    ORJSON = True
 except:
     import json
-    INDENT = True
+    ORJSON = False
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, IO
+from typing import Dict, List, Optional
 
 from ._ObjectPrediction import ObjectPrediction, BBox, Polygon
 
@@ -63,10 +65,18 @@ class ObjectPredictions:
         :return: the generated JSON string
         :rtype: str
         """
-        if INDENT:
-            return json.dumps(self.to_dict(), indent=indent)
+        global ORJSON_INDENT_WARNING
+
+        if ORJSON:
+            if indent is None:
+                return json.dumps(self.to_dict()).decode("utf-8")
+            else:
+                if (indent != 2) and not ORJSON_INDENT_WARNING:
+                    ORJSON_INDENT_WARNING = True
+                    print("WARNING: Only indent=2 is supported!")
+                return json.dumps(self.to_dict(), option=orjson.OPT_INDENT_2).decode("utf-8")
         else:
-            return json.dumps(self.to_dict())
+            return json.dumps(self.to_dict(), indent=indent)
 
     def save_json_to_file(self, path: str, indent: Optional[int] = None):
         """
@@ -81,16 +91,26 @@ class ObjectPredictions:
             fp.write(self.to_json_string(indent=indent))
             fp.write("\n")
 
-    def write_json_to_stream(self, stream: IO[str], indent: Optional[int] = None):
+    def write_json_to_stream(self, stream, indent: Optional[int] = None):
         """
         Saves the JSON representation to the specified stream.
 
-        :param stream: the stream to write to
-        :type stream: str
+        :param stream: the stream to write to (file-like object)
         :param indent: the indentation to use for pretty printing, None for space-saving output
         :type indent: int
         """
-        json.dump(self, stream, indent=indent)
+        global ORJSON_INDENT_WARNING
+
+        if ORJSON:
+            if indent is None:
+                stream.write(json.dumps(self.to_dict()))
+            else:
+                if (indent != 2) and not ORJSON_INDENT_WARNING:
+                    ORJSON_INDENT_WARNING = True
+                    print("OPEX ORJSON WARNING: Only indent=2 is supported!")
+                stream.write(json.dumps(self.to_dict(), option=orjson.OPT_INDENT_2))
+        else:
+            json.dump(self, stream, indent=indent)
 
     @classmethod
     def _bbox_from_dict(cls, index: int, d: Dict) -> BBox:
@@ -242,17 +262,23 @@ class ObjectPredictions:
         :return: the predictions
         :rtype: ObjectPredictions
         """
-        with open(path, "r") as fp:
-            return cls._from_dict(json.load(fp))
+        if ORJSON:
+            with open(path, "rb") as fp:
+                return cls._from_dict(json.loads(fp.read()))
+        else:
+            with open(path, "r") as fp:
+                return cls._from_dict(json.load(fp))
 
     @classmethod
-    def read_json_from_stream(cls, stream: IO[str]) -> 'ObjectPredictions':
+    def read_json_from_stream(cls, stream) -> 'ObjectPredictions':
         """
         Loads the object predictions from the stream.
 
-        :param stream: the stream to read from
-        :type stream: str
+        :param stream: the stream to read from (file-like object)
         :return: the predictions
         :rtype: ObjectPredictions
         """
-        return cls._from_dict(json.load(stream))
+        if ORJSON:
+            return cls._from_dict(json.loads(stream.read()))
+        else:
+            return cls._from_dict(json.load(stream))
