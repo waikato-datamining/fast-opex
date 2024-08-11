@@ -1,3 +1,5 @@
+import datetime
+
 ORJSON_INDENT_WARNING = False
 try:
     import orjson
@@ -218,8 +220,9 @@ class ObjectPredictions:
 
         # timestamp
         if "timestamp" not in d:
-            raise Exception("No 'timestamp' present!")
-        timestamp = d["timestamp"]
+            timestamp = str(datetime.datetime.now())
+        else:
+            timestamp = d["timestamp"]
 
         # id
         if "id" not in d:
