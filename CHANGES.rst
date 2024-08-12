@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.3 (????-??-??)
+0.0.3 (2024-08-12)
 ------------------
 
 - method `_from_dict` (`opex.ObjectPredictions`) no longer raises an Exception
