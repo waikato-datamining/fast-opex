@@ -51,12 +51,15 @@ class ObjectPredictions:
         objs = []
         for obj in self.objects:
             objs.append(obj.to_dict())
-        return {
-            "timestamp": self.timestamp,
+        result = {
             "id": self.id,
             "objects": objs,
-            "meta": self.meta,
         }
+        if self.timestamp is not None:
+            result["timestamp"] = self.timestamp
+        if self.meta is not None:
+            result["meta"] = self.meta
+        return result
 
     def to_json_string(self, indent: Optional[int] = None) -> str:
         """
@@ -219,9 +222,8 @@ class ObjectPredictions:
             raise Exception("Expected dictionary, but got: %s" % str(type(d)))
 
         # timestamp
-        if "timestamp" not in d:
-            timestamp = str(datetime.datetime.now())
-        else:
+        timestamp = None
+        if "timestamp" in d:
             timestamp = d["timestamp"]
 
         # id
