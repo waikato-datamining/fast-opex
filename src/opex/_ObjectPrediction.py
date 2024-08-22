@@ -32,7 +32,7 @@ class ObjectPrediction:
         :return: the string representation
         :rtype: str
         """
-        return "score=%s, label=%s" % (str(self.score), self.label)
+        return "label=%s, score=%s" % (self.label, str(self.score))
 
     def to_dict(self):
         """
@@ -41,9 +41,13 @@ class ObjectPrediction:
         :return: the generated dictionary
         :rtype: dict
         """
-        return {
-            "score": self.score,
+        result = {
             "label": self.label,
             "bbox": self.bbox.to_dict(),
             "polygon": self.polygon.to_dict(),
         }
+        if self.score is not None:
+            result["score"] = self.score
+        if self.meta is not None:
+            result["meta"] = self.meta
+        return result

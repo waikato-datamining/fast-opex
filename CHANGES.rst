@@ -6,6 +6,8 @@ Changelog
 
 - method `_object_from_dict` (`opex.ObjectPredictions`) now handles incorrect
   `score` values better
+- method `to_dict` (`opex.ObjectPrediction`) only returns the score when not
+  `None`; meta-data is returned now as well
 
 
 0.0.3 (2024-08-12)
