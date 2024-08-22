@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.0.4 (????-??-??)
+0.0.4 (2024-08-22)
 ------------------
 
 - method `_object_from_dict` (`opex.ObjectPredictions`) now handles incorrect
