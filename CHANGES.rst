@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.0.4 (????-??-??)
+------------------
+
+- method `_object_from_dict` (`opex.ObjectPredictions`) now handles incorrect
+  `score` values better
+
+
 0.0.3 (2024-08-12)
 ------------------
 

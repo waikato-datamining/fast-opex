@@ -180,8 +180,11 @@ class ObjectPredictions:
 
         # score (optional)
         score = None
-        if "score" in d:
-            score = float(d["score"])
+        if ("score" in d) and (d["score"] is not None):
+            try:
+                score = float(d["score"])
+            except:
+                raise Exception("'score' is not a number (object #%d)!" % index)
 
         # label
         if "label" not in d:
