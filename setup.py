@@ -13,7 +13,7 @@ def _read(f):
 
 
 setup(
-    name="fast-opex",
+    name="fast_opex",
     description="Simpler and faster implementation of the OPEX JSON file format for object detection predictions.",
     long_description=(
         _read('DESCRIPTION.rst') + b'\n' +
